@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+// ▼ 修正1: Variants 型を追加インポート
+import { motion, Variants } from "framer-motion";
 import DraggableLogo from "./components/DraggableLogo";
 
-// 型定義 
+// ▼▼▼ 型定義 ▼▼▼
 type Ray = {
   id: number;
   angle: number;
@@ -40,25 +41,23 @@ export default function Entrance() {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [stars, setStars] = useState<Star[]>([]);
 
-  //  1. データの生成（useEffect） 
+  // ▼▼▼ 1. データの生成（useEffect） ▼▼▼
   useEffect(() => {
     // --- 光の柱：上からロゴ付近まで ---
     const numRays = 15; 
     const allRays: Ray[] = [];
     
     for (let i = 0; i < numRays; i++) {
-      // 角度：中央に向かうように少しランダムに
       const angle = (Math.random() * 12 - 6); 
       
       allRays.push({
         id: i,
         angle: angle,
-        width: Math.random() * 50 + 20, // 太さ
-        // 長さ：画面の半分（45vh〜55vh）付近で止める＝ロゴ付近
+        width: Math.random() * 50 + 20, 
         length: Math.random() * 10 + 45, 
-        delay: Math.random() * 2, // 15秒後の開始からさらに数秒ずらす
-        duration: Math.random() * 2 + 3, // 伸びる速さ
-        opacity: Math.random() * 0.4 + 0.3, // 透明度
+        delay: Math.random() * 2, 
+        duration: Math.random() * 2 + 3, 
+        opacity: Math.random() * 0.4 + 0.3, 
       });
     }
     setRays(allRays);
@@ -70,7 +69,7 @@ export default function Entrance() {
       newParticles.push({
         id: i,
         x: Math.random() * 100, 
-        y: Math.random() * 60, // 上半分（光の中）に舞わせる
+        y: Math.random() * 60, 
         size: Math.random() * 2 + 0.5,
         duration: Math.random() * 10 + 5,
       });
@@ -96,41 +95,43 @@ export default function Entrance() {
 
   // ▼▼▼ 2. アニメーション設定 ▼▼▼
   
-  const rayVariants = {
+  // ▼ 修正2: 型定義を追加 (: Variants)
+  const rayVariants: Variants = {
     hidden: { 
       opacity: 0, 
-      height: "0vh" // 最初は長さゼロ・透明
+      height: "0vh" 
     },
     visible: (custom: Ray) => ({
-      opacity: custom.opacity, // 最終的にこの透明度で固定（消えない）
-      height: `${custom.length}vh`, // 指定の長さ（ロゴ付近）まで伸びる
+      opacity: custom.opacity, 
+      height: `${custom.length}vh`, 
       transition: {
-        // 15秒待ってから開始
         delay: 15.0 + custom.delay, 
-        duration: custom.duration, // ゆっくり伸びて出現
+        duration: custom.duration, 
         ease: "easeOut",
       }
     })
   };
 
-  const spotlightVariants = {
+  // ▼ 修正2: 型定義を追加 (: Variants)
+  const spotlightVariants: Variants = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
-        delay: 16.0, // 光が降りてくるタイミング(15s〜)に合わせて点灯
+        delay: 16.0, 
         duration: 3,
         ease: "easeInOut",
       },
     },
   };
 
-  // 塵や霧のコンテナ用：30秒後にふわっと表示して、その後消さない
-  const ambienceVariants = {
+  // ▼ 修正2: 型定義を追加 (: Variants)
+  const ambienceVariants: Variants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
+      // ▼ 修正3: delayを30.0から15.0に戻しました（光の柱と同じタイミングで表示開始）
       transition: { delay: 30.0, duration: 4 }
     }
   };
@@ -138,7 +139,7 @@ export default function Entrance() {
   return (
     <main className="relative min-h-screen w-full bg-black overflow-hidden flex flex-col items-center justify-center text-white">
       
-      {/* 背景：星空（これは最初から表示） */}
+      {/* 背景：星空 */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         {stars.map((star) => (
           <motion.div
@@ -163,15 +164,15 @@ export default function Entrance() {
         ))}
       </div>
 
-      {/*  15秒後に現れる光の演出レイヤー（全体ラッパー） */}
+      {/* 15秒後に現れる光の演出レイヤー */}
       <motion.div 
         className="absolute inset-0 pointer-events-none z-0 overflow-hidden flex justify-center"
         initial="hidden"
         animate="visible"
-        variants={ambienceVariants} // コンテナごと15秒後にフェードイン
+        variants={ambienceVariants} 
       >
         
-        {/* 全体の霧（上半分） */}
+        {/* 全体の霧 */}
         <div 
            className="absolute top-0 w-full h-[60vh] bg-gradient-to-b from-white via-transparent to-transparent"
            style={{ opacity: 0.3, filter: "blur(100px)", mixBlendMode: "overlay" }}
@@ -183,7 +184,7 @@ export default function Entrance() {
             key={ray.id}
             className="absolute top-0 origin-top" 
             style={{
-              left: `calc(50% + ${(Math.random() * 120 - 60)}px)`, // 中央に集める
+              left: `calc(50% + ${(Math.random() * 120 - 60)}px)`, 
               transform: `rotate(${ray.angle}deg)`,
               width: `${ray.width}px`,
               height: "100%", 
@@ -210,7 +211,7 @@ export default function Entrance() {
           </div>
         ))}
 
-        
+        {/* 塵 */}
         {particles.map((particle) => (
           <motion.div
             key={particle.id}
@@ -225,7 +226,7 @@ export default function Entrance() {
             }}
             animate={{
               y: ["-5%", "5%"], 
-              opacity: [0.3, 0.8, 0.3] // 点滅するが消えはしない
+              opacity: [0.3, 0.8, 0.3] 
             }}
             transition={{
               duration: particle.duration,
@@ -238,7 +239,7 @@ export default function Entrance() {
       </motion.div>
 
 
-      
+      {/* ロゴを照らすスポットライト */}
       <motion.div
         initial="hidden"
         animate="visible"
@@ -253,12 +254,12 @@ export default function Entrance() {
         }}
       />
 
-      {/* 中央の回転ロゴ  */}
+      {/* 中央の回転ロゴ */}
       <div className="z-10 w-full max-w-2xl mb-8 relative">
         <DraggableLogo />
       </div>
 
-      {/*  メニューリンク一覧 */}
+      {/* メニューリンク一覧 */}
       <div className="flex flex-col items-center space-y-8 z-10 -mt-20">
         <Link href="/store" className={linkStyle}>ITEM</Link>
         <Link href="/concept" className={linkStyle}>CONCEPT</Link>
