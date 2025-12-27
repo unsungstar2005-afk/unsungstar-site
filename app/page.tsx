@@ -257,7 +257,7 @@ export default function Entrance() {
       {/* style={{ transform: "scale(3)" }} を追加して強制的に3倍表示 */}
       <div 
         className="z-10 w-full max-w-5xl mb-8 relative"
-        style={{ transform: "scale(3)" }}
+        style={{ transform: "scale(2)" }}
       >
         <DraggableLogo />
       </div>
