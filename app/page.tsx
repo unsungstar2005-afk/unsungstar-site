@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-// Variants 型を追加インポート済み
 import { motion, Variants } from "framer-motion";
 import DraggableLogo from "./components/DraggableLogo";
 
@@ -93,7 +92,7 @@ export default function Entrance() {
 
   // ▼▼▼ 2. アニメーション設定 (ここを変更) ▼▼▼
   
-  // ▼ 変更1: 差し込む光（Ray）を先に開始させる
+  // ▼ 変更点A: 差し込む光（Ray）の開始を30秒にする
   const rayVariants: Variants = {
     hidden: { 
       opacity: 0, 
@@ -103,36 +102,36 @@ export default function Entrance() {
       opacity: custom.opacity, 
       height: `${custom.length}vh`, 
       transition: {
-        // 変更: 15.0 -> 1.5 (1.5秒後に開始)
-        delay: 1.5 + custom.delay, 
+        // 変更: 1.5 -> 30 (30秒後に開始)
+        delay: 30 + custom.delay, 
         duration: custom.duration, 
         ease: "easeOut",
       }
     })
   };
 
-  // ▼ 変更2: スポットライトを後に開始させる
+  // ▼ 変更点B: スポットライトを光の後（33秒後）に開始させる
   const spotlightVariants: Variants = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
-        // 変更: 16.0 -> 4.5 (光が降り注いだ後の4.5秒後に点灯)
-        delay: 4.5, 
+        // 変更: 4.5 -> 33 (光が30秒で始まるので、その3秒後の33秒に設定)
+        delay: 33, 
         duration: 3,
         ease: "easeInOut",
       },
     },
   };
 
-  // ▼ 変更3: 全体の霧（Ambience）も先に開始させる
+  // ▼ 変更点C: 全体の霧（Ambience）も30秒後に開始させる
   const ambienceVariants: Variants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
-      // 変更: 15.0 -> 1.5 (Rayと同じく1.5秒後に開始)
-      transition: { delay: 1.5, duration: 4 }
+      // 変更: 1.5 -> 30 (Rayと同じく30秒後に開始)
+      transition: { delay: 30, duration: 4 }
     }
   };
 
@@ -254,9 +253,12 @@ export default function Entrance() {
         }}
       />
 
-      {/* ▼▼▼ 変更4: 中央の回転ロゴのサイズを拡大 ▼▼▼ */}
-      {/* max-w-2xl から max-w-5xl に変更して大きく表示 */}
-      <div className="z-10 w-full max-w-5xl mb-8 relative">
+      {/* ▼▼▼ 変更点D: ロゴを3倍にする設定を追加 ▼▼▼ */}
+      {/* style={{ transform: "scale(3)" }} を追加して強制的に3倍表示 */}
+      <div 
+        className="z-10 w-full max-w-5xl mb-8 relative"
+        style={{ transform: "scale(3)" }}
+      >
         <DraggableLogo />
       </div>
 
