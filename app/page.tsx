@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-// ▼ 修正1: Variants 型を追加インポート
+// Variants 型を追加インポート済み
 import { motion, Variants } from "framer-motion";
 import DraggableLogo from "./components/DraggableLogo";
 
-// ▼▼▼ 型定義 ▼▼▼
+// ▼▼▼ 型定義 (変更なし) ▼▼▼
 type Ray = {
   id: number;
   angle: number;
@@ -41,15 +41,13 @@ export default function Entrance() {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [stars, setStars] = useState<Star[]>([]);
 
-  // ▼▼▼ 1. データの生成（useEffect） ▼▼▼
+  // ▼▼▼ 1. データの生成（useEffect） (変更なし) ▼▼▼
   useEffect(() => {
-    // --- 光の柱：上からロゴ付近まで ---
+    // --- 光の柱 ---
     const numRays = 15; 
     const allRays: Ray[] = [];
-    
     for (let i = 0; i < numRays; i++) {
       const angle = (Math.random() * 12 - 6); 
-      
       allRays.push({
         id: i,
         angle: angle,
@@ -62,7 +60,7 @@ export default function Entrance() {
     }
     setRays(allRays);
 
-    // --- 塵（Particles） ---
+    // --- 塵 ---
     const numParticles = 80;
     const newParticles: Particle[] = [];
     for (let i = 0; i < numParticles; i++) {
@@ -76,7 +74,7 @@ export default function Entrance() {
     }
     setParticles(newParticles);
 
-    // --- 星空（Stars） ---
+    // --- 星空 ---
     const numStars = 100;
     const newStars: Star[] = [];
     for (let i = 0; i < numStars; i++) {
@@ -93,9 +91,9 @@ export default function Entrance() {
   }, []);
 
 
-  // ▼▼▼ 2. アニメーション設定 ▼▼▼
+  // ▼▼▼ 2. アニメーション設定 (ここを変更) ▼▼▼
   
-  // ▼ 修正2: 型定義を追加 (: Variants)
+  // ▼ 変更1: 差し込む光（Ray）を先に開始させる
   const rayVariants: Variants = {
     hidden: { 
       opacity: 0, 
@@ -105,41 +103,43 @@ export default function Entrance() {
       opacity: custom.opacity, 
       height: `${custom.length}vh`, 
       transition: {
-        delay: 15.0 + custom.delay, 
+        // 変更: 15.0 -> 1.5 (1.5秒後に開始)
+        delay: 1.5 + custom.delay, 
         duration: custom.duration, 
         ease: "easeOut",
       }
     })
   };
 
-  // ▼ 修正2: 型定義を追加 (: Variants)
+  // ▼ 変更2: スポットライトを後に開始させる
   const spotlightVariants: Variants = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
-        delay: 16.0, 
+        // 変更: 16.0 -> 4.5 (光が降り注いだ後の4.5秒後に点灯)
+        delay: 4.5, 
         duration: 3,
         ease: "easeInOut",
       },
     },
   };
 
-  // ▼ 修正2: 型定義を追加 (: Variants)
+  // ▼ 変更3: 全体の霧（Ambience）も先に開始させる
   const ambienceVariants: Variants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
-      // ▼ 修正3: delayを30.0から15.0に戻しました（光の柱と同じタイミングで表示開始）
-      transition: { delay: 30.0, duration: 4 }
+      // 変更: 15.0 -> 1.5 (Rayと同じく1.5秒後に開始)
+      transition: { delay: 1.5, duration: 4 }
     }
   };
 
   return (
     <main className="relative min-h-screen w-full bg-black overflow-hidden flex flex-col items-center justify-center text-white">
       
-      {/* 背景：星空 */}
+      {/* 背景：星空 (変更なし) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         {stars.map((star) => (
           <motion.div
@@ -164,7 +164,7 @@ export default function Entrance() {
         ))}
       </div>
 
-      {/* 15秒後に現れる光の演出レイヤー */}
+      {/* 差し込む光の演出レイヤー (variantsの変更が反映される) */}
       <motion.div 
         className="absolute inset-0 pointer-events-none z-0 overflow-hidden flex justify-center"
         initial="hidden"
@@ -190,7 +190,7 @@ export default function Entrance() {
               height: "100%", 
             }}
           >
-            {/* 層1: 周りの柔らかな発光 */}
+            {/* 層1 */}
             <motion.div
               custom={ray}
               initial="hidden"
@@ -199,7 +199,7 @@ export default function Entrance() {
               className="absolute top-0 left-1/2 -translate-x-1/2 w-full bg-gradient-to-b from-white/40 via-white/10 to-transparent"
               style={{ filter: "blur(30px)" }}
             />
-             {/* 層2: 芯となる鋭い光の筋 */}
+             {/* 層2 */}
             <motion.div
               custom={ray}
               initial="hidden"
@@ -239,7 +239,7 @@ export default function Entrance() {
       </motion.div>
 
 
-      {/* ロゴを照らすスポットライト */}
+      {/* ロゴを照らすスポットライト (variantsの変更が反映される) */}
       <motion.div
         initial="hidden"
         animate="visible"
@@ -254,12 +254,13 @@ export default function Entrance() {
         }}
       />
 
-      {/* 中央の回転ロゴ */}
-      <div className="z-10 w-full max-w-2xl mb-8 relative">
+      {/* ▼▼▼ 変更4: 中央の回転ロゴのサイズを拡大 ▼▼▼ */}
+      {/* max-w-2xl から max-w-5xl に変更して大きく表示 */}
+      <div className="z-10 w-full max-w-5xl mb-8 relative">
         <DraggableLogo />
       </div>
 
-      {/* メニューリンク一覧 */}
+      {/* メニューリンク一覧 (変更なし) */}
       <div className="flex flex-col items-center space-y-8 z-10 -mt-20">
         <Link href="/store" className={linkStyle}>ITEM</Link>
         <Link href="/concept" className={linkStyle}>CONCEPT</Link>
