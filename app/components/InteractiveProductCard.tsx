@@ -29,7 +29,7 @@ export default function InteractiveProductCard({ src, alt, itemId, shopDomain }:
     return controls.stop;
   }, [autoRotateY]);
 
-  // ▼▼▼ 【修正箇所】ここに型定義 (: any) を追加しました ▼▼▼
+  // 型エラー回避のため : any を付与
   const combinedRotateY = useTransform(
     [autoRotateY, dragRotateY],
     ([auto, drag]: any) => auto + drag
@@ -55,15 +55,16 @@ export default function InteractiveProductCard({ src, alt, itemId, shopDomain }:
   return (
     <div 
       className="relative w-full aspect-[3/4] overflow-visible perspective-container z-10 mb-4"
-      style={{ perspective: "1000px" }} // 念のためスタイルも追加
+      style={{ perspective: "1000px" }}
     >
       <motion.div
-        {...bind()}
+        // ▼▼▼ 【修正箇所】bind()の結果をanyでキャストして型競合を回避 ▼▼▼
+        {...(bind() as any)}
         style={{
           rotateX: dragRotateX,
           rotateY: combinedRotateY,
           touchAction: "none",
-          transformStyle: "preserve-3d" // 念のためスタイルも追加
+          transformStyle: "preserve-3d"
         }}
         className="w-full h-full cursor-grab active:cursor-grabbing origin-center rounded-lg preserve-3d shadow-2xl shadow-black/50"
       >
