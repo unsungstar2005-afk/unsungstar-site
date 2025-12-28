@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import DraggableLogo from "./components/DraggableLogo";
 
-// ▼▼▼ 型定義 (変更なし) ▼▼▼
+// ▼▼▼ 型定義  ▼▼▼
 type Ray = {
   id: number;
   angle: number;
@@ -40,7 +40,7 @@ export default function Entrance() {
   const [particles, setParticles] = useState<Particle[]>([]);
   const [stars, setStars] = useState<Star[]>([]);
 
-  // ▼▼▼ 1. データの生成（useEffect） (変更なし) ▼▼▼
+  // ▼▼▼ 1. データの生成（useEffect）  ▼▼▼
   useEffect(() => {
     // --- 光の柱 ---
     const numRays = 15; 
@@ -90,9 +90,8 @@ export default function Entrance() {
   }, []);
 
 
-  // ▼▼▼ 2. アニメーション設定 (ここを変更) ▼▼▼
-  
-  // ▼ 変更点A: 差し込む光（Ray）の開始を30秒にする
+  // ▼▼▼ 2. アニメーション設定 ▼▼▼
+ 
   const rayVariants: Variants = {
     hidden: { 
       opacity: 0, 
@@ -102,7 +101,7 @@ export default function Entrance() {
       opacity: custom.opacity, 
       height: `${custom.length}vh`, 
       transition: {
-        // 変更: 1.5 -> 30 (30秒後に開始)
+      
         delay: 30 + custom.delay, 
         duration: custom.duration, 
         ease: "easeOut",
@@ -110,14 +109,14 @@ export default function Entrance() {
     })
   };
 
-  // ▼ 変更点B: スポットライトを光の後（33秒後）に開始させる
+ 
   const spotlightVariants: Variants = {
     hidden: { opacity: 0, scale: 0.9 },
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
-        // 変更: 4.5 -> 33 (光が30秒で始まるので、その3秒後の33秒に設定)
+        
         delay: 33, 
         duration: 3,
         ease: "easeInOut",
@@ -125,12 +124,12 @@ export default function Entrance() {
     },
   };
 
-  // ▼ 変更点C: 全体の霧（Ambience）も30秒後に開始させる
+ 
   const ambienceVariants: Variants = {
     hidden: { opacity: 0 },
     visible: { 
       opacity: 1,
-      // 変更: 1.5 -> 30 (Rayと同じく30秒後に開始)
+     
       transition: { delay: 30, duration: 4 }
     }
   };
@@ -238,7 +237,7 @@ export default function Entrance() {
       </motion.div>
 
 
-      {/* ロゴを照らすスポットライト (variantsの変更が反映される) */}
+      
       <motion.div
         initial="hidden"
         animate="visible"
@@ -253,8 +252,7 @@ export default function Entrance() {
         }}
       />
 
-      {/* ▼▼▼ 変更点D: ロゴを3倍にする設定を追加 ▼▼▼ */}
-      {/* style={{ transform: "scale(3)" }} を追加して強制的に3倍表示 */}
+      
       <div 
         className="z-10 w-full max-w-5xl mb-8 relative"
         style={{ transform: "scale(2)" }}
@@ -262,7 +260,7 @@ export default function Entrance() {
         <DraggableLogo />
       </div>
 
-      {/* メニューリンク一覧 (変更なし) */}
+      {/* メニューリンク一覧 */}
       <div className="flex flex-col items-center space-y-8 z-10 -mt-20">
         <Link href="/store" className={linkStyle}>ITEM</Link>
         <Link href="/concept" className={linkStyle}>CONCEPT</Link>

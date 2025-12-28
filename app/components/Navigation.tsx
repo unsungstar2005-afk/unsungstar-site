@@ -8,12 +8,12 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
 
-  // ▼▼▼ メニューの内容を更新しました ▼▼▼
+  
   const links = [
     { name: "HOME", href: "/" },          // エントランスに戻る
     { name: "ITEM", href: "/store" },     // 商品一覧へ
     { name: "CONCEPT", href: "/concept" },// コンセプトへ
-    // Instagramは外部サイトなので、特別な処理が必要です（下で書きます）
+    
   ];
   
   // InstagramのURL

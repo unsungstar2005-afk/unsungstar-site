@@ -58,7 +58,7 @@ export default function InteractiveProductCard({ src, alt, itemId, shopDomain }:
       style={{ perspective: "1000px" }}
     >
       <motion.div
-        // ▼▼▼ 【修正箇所】bind()の結果をanyでキャストして型競合を回避 ▼▼▼
+        // bind()の結果をanyでキャストして型競合を回避
         {...(bind() as any)}
         style={{
           rotateX: dragRotateX,

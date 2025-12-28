@@ -39,13 +39,12 @@ export default async function StorePage() {
     <main className="min-h-screen p-8 pb-24 bg-black text-white relative">
       <div className="relative z-10">
         
-        {/* ▼ 修正: ロゴを囲むdivを追加し、scale-[2.5] で2.5倍に拡大 */}
-        {/* margin-top/bottom も増やして、拡大したロゴが商品と重ならないように調整 */}
+        
         <div className="flex justify-center mt-20 mb-32 transform scale-[2.5] origin-center">
           <DraggableLogo />
         </div>
         
-        {/* ロゴ下の余白（念のためさらに広めに確保） */}
+       
         <div className="mb-48"></div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 max-w-6xl mx-auto px-4">
