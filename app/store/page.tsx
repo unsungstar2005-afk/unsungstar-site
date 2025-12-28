@@ -2,7 +2,8 @@ import Image from "next/image";
 import { getItems } from "@/lib/baseApi";
 // ▼ 階層が変わったので "../" をつけて読み込みます
 import DraggableLogo from "../components/DraggableLogo";
-import InteractiveProductCard from "../components/InteractiveProductCard"; 
+// ↓ 回るカードのコンポーネントはもう使わないので削除（またはコメントアウト）
+// import InteractiveProductCard from "../components/InteractiveProductCard"; 
 // ▼ 追加：星空コンポーネントを読み込む
 import StarBackground from "../components/StarBackground";
 
@@ -29,7 +30,6 @@ export default async function StorePage() {
   if (!items || items.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4 text-white bg-[#111111] relative">
-        {/* エラー画面にも星空を出したい場合はここに追加 */}
         <StarBackground />
         <div className="relative z-10">
           <h2 className="text-2xl font-bold mb-4 text-red-400">エラーが発生しました</h2>
@@ -43,12 +43,12 @@ export default async function StorePage() {
 
   return (
     <main className="min-h-screen p-8 pb-24 bg-[#111111] text-white relative">
-      {/* ▼ 追加：背景の星空（コンテンツより背面になるよう配置） */}
+      {/* ▼ 背景の星空 */}
       <StarBackground />
 
-      {/* ▼ 既存コンテンツを z-10 で囲み、星空より手前に表示させる */}
+      {/* ▼ コンテンツエリア */}
       <div className="relative z-10">
-        {/* ロゴ */}
+        {/* ロゴ（これは回るまま維持） */}
         <DraggableLogo />
         
         <div className="mb-24"></div>
@@ -57,20 +57,33 @@ export default async function StorePage() {
           {items.map((item) => (
             <div key={item.item_id} className="group relative z-0">
               {item.img1_origin ? (
-                <InteractiveProductCard
-                  src={item.img1_origin}
-                  alt={item.title}
-                  itemId={item.item_id}
-                  shopDomain={SHOP_DOMAIN}
-                />
+                /* ▼ 修正: InteractiveProductCardをやめて、普通のリンク付き画像にしました */
+                <a 
+                  href={`https://${SHOP_DOMAIN}/items/${item.item_id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block relative w-full aspect-[3/4] mb-4 overflow-hidden rounded-lg shadow-xl border border-gray-800 transition-opacity hover:opacity-80"
+                >
+                  <img
+                    src={item.img1_origin}
+                    alt={item.title}
+                    className="w-full h-full object-cover"
+                  />
+                </a>
               ) : (
                 <div className="relative w-full aspect-[3/4] bg-gray-900 mb-4 rounded-lg flex items-center justify-center text-gray-500 border border-gray-800 shadow-xl">
                   No Image
                 </div>
               )}
+              
+              {/* テキスト情報 */}
               <div className="text-center mt-6">
-                <h2 className="text-lg font-medium text-gray-200 line-clamp-1 tracking-wider">{item.title}</h2>
-                <p className="text-base text-gray-400 mt-2 font-mono">¥{item.price.toLocaleString()}</p>
+                <h2 className="text-lg font-medium text-gray-200 line-clamp-1 tracking-wider">
+                  {item.title}
+                </h2>
+                <p className="text-base text-gray-400 mt-2 font-mono">
+                  ¥{item.price.toLocaleString()}
+                </p>
               </div>
             </div>
           ))}
