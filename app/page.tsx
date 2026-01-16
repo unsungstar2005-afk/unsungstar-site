@@ -130,7 +130,7 @@ export default function Entrance() {
     visible: { 
       opacity: 1,
      
-      transition: { delay: 30, duration: 4 }
+      transition: { delay: 7, duration: 4 }
     }
   };
 

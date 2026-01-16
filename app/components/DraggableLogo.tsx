@@ -82,7 +82,7 @@ export default function DraggableLogo() {
         dragElastic={0}
         dragMomentum={false}
       >
-        {/* ▼▼▼ 修正箇所：パスを /logo.png に変更 ▼▼▼ */}
+        
         <img 
           src="/logo.png" 
           alt="UNSUNG STAR Logo" 

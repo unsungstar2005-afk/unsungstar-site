@@ -1,6 +1,6 @@
 // types/index.ts
 
-// 必ず "export" をつけて定義します
+
 export type BaseItem = {
   item_id: number;
   title: string;
